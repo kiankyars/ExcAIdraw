@@ -13,6 +13,7 @@ import TestAddCodeButton from './components/TestAddCodeButton'
 import { TldrawLogo } from './components/TldrawLogo'
 import { useState } from 'react'
 import { ApiSettingsModal } from './components/ApiSettingsModal'
+import { OnboardingTutorial } from './components/OnboardingTutorial'
 
 // Dynamically import ThreeJSCanvas with ssr: false
 const ThreeJSCanvas = dynamic(
@@ -83,9 +84,22 @@ const TabGroup = ({ activeTab, setActiveTab }: TabGroupProps) => {
 export default function App() {
 	const { activeTab, setActiveTab } = useTabStore()
 	const [isApiSettingsOpen, setIsApiSettingsOpen] = useState(false)
+	const [showArrow, setShowArrow] = useState(false)
+
+	const handleTutorialComplete = () => {
+		setShowArrow(true);
+	};
+
+	const handleApiKeysClick = (e: React.MouseEvent) => {
+		e.stopPropagation();
+		e.preventDefault();
+		setIsApiSettingsOpen(true);
+		setShowArrow(false);
+	};
 
 	return (
 		<>
+			<OnboardingTutorial onComplete={handleTutorialComplete} />
 			<TabGroup activeTab={activeTab} setActiveTab={setActiveTab} />
 			<ApiSettingsModal 
 				isOpen={isApiSettingsOpen}
@@ -107,13 +121,16 @@ export default function App() {
 								<ImproveDrawingButton />
 								<AutoDrawButton />
 								<button
-									onClick={() => setIsApiSettingsOpen(true)}
+									onClick={handleApiKeysClick}
 									className="tl-button"
 									style={{
 										display: 'flex',
 										alignItems: 'center',
 										gap: '8px',
 										fontSize: '14px',
+										position: 'relative',
+										zIndex: 999999,
+										pointerEvents: 'auto',
 									}}
 								>
 									<span style={{ fontSize: '16px' }}>⚙️</span>
