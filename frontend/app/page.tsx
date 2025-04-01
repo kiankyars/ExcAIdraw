@@ -143,11 +143,6 @@ export default function App() {
 								gap: '8px', 
 								transform: 'scale(0.8)', 
 								transformOrigin: 'right center',
-								'> button': {
-									height: '40px',
-									padding: '0 12px',
-									fontSize: '14px',
-								}
 							}}>
 								<Vibe3DCodeButton />
 								<ImproveDrawingButton />
