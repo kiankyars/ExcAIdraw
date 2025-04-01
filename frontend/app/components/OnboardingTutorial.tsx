@@ -15,7 +15,7 @@ const WelcomeStep = () => (
       controls
       src="/tutorial-video.mp4"
     />
-    <p>Let's get you started with a quick overview of the app.</p>
+    <p>Let&apos;s get you started with a quick overview of the app.</p>
   </div>
 );
 
@@ -39,7 +39,7 @@ const ApiKeysStep = () => (
         lineHeight: '1.6'
       }}
     >
-      To use ExcAIdraw, you'll need two free API keys:
+      To use ExcAIdraw, you&apos;ll need two free API keys:
     </p>
 
     <div className="flex flex-col gap-4">
@@ -157,7 +157,7 @@ const ApiKeysStep = () => (
         fontStyle: 'italic'
       }}
     >
-      Click "Next" and we'll show you where to add these keys.
+      Click "Next" and we&aposll show you where to add these keys.
     </p>
   </div>
 );

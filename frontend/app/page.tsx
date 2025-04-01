@@ -135,7 +135,7 @@ export default function App() {
 					zIndex: activeTab === 'tldraw' ? 2 : 1
 				}}>
 					<Tldraw 
-						persistenceKey="vibe-3d-code" 
+						persistenceKey="excaidraw" 
 						shareZone={
 							<div style={{ 
 								display: 'flex', 
