@@ -157,7 +157,7 @@ const ApiKeysStep = () => (
         fontStyle: 'italic'
       }}
     >
-      Click "Next" and we&aposll show you where to add these keys.
+      Click Next and we will show you where to add these keys.
     </p>
   </div>
 );
