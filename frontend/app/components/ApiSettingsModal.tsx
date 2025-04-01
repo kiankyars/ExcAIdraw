@@ -4,9 +4,14 @@ import { validateApiKeys } from '../utils/apiKeys';
 interface ApiSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSave?: () => void;
 }
 
-export function ApiSettingsModal({ isOpen, onClose }: ApiSettingsModalProps) {
+export const ApiSettingsModal: React.FC<ApiSettingsModalProps> = ({ 
+  isOpen, 
+  onClose,
+  onSave,
+}) => {
   const [googleApiKey, setGoogleApiKey] = useState('');
   const [trellisApiKey, setTrellisApiKey] = useState('');
   const [error, setError] = useState('');
@@ -34,6 +39,7 @@ export function ApiSettingsModal({ isOpen, onClose }: ApiSettingsModalProps) {
     setError('');
     
     onClose();
+    onSave?.();
   };
 
   if (!isOpen) return null;

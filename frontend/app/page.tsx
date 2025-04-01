@@ -11,9 +11,10 @@ import { Model3DPreviewShapeUtil } from './PreviewShape/Model3DPreviewShape'
 import { useTabStore } from './store/appStore'
 import TestAddCodeButton from './components/TestAddCodeButton'
 import { TldrawLogo } from './components/TldrawLogo'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ApiSettingsModal } from './components/ApiSettingsModal'
 import { OnboardingTutorial } from './components/OnboardingTutorial'
+import { DynamicArrow } from './components/DynamicArrow'
 
 // Dynamically import ThreeJSCanvas with ssr: false
 const ThreeJSCanvas = dynamic(
@@ -85,6 +86,15 @@ export default function App() {
 	const { activeTab, setActiveTab } = useTabStore()
 	const [isApiSettingsOpen, setIsApiSettingsOpen] = useState(false)
 	const [showArrow, setShowArrow] = useState(false)
+	const [mounted, setMounted] = useState(false)
+
+	useEffect(() => {
+		setMounted(true);
+		const apiKeysClicked = localStorage.getItem('apiKeysClicked');
+		if (apiKeysClicked) {
+			setShowArrow(false);
+		}
+	}, []);
 
 	const handleTutorialComplete = () => {
 		setShowArrow(true);
@@ -95,7 +105,17 @@ export default function App() {
 		e.preventDefault();
 		setIsApiSettingsOpen(true);
 		setShowArrow(false);
+		localStorage.setItem('apiKeysClicked', 'true');
 	};
+
+	const handleApiKeysSave = () => {
+		setShowArrow(false);
+		localStorage.setItem('apiKeysClicked', 'true');
+	};
+
+	if (!mounted) {
+		return null;
+	}
 
 	return (
 		<>
@@ -104,6 +124,7 @@ export default function App() {
 			<ApiSettingsModal 
 				isOpen={isApiSettingsOpen}
 				onClose={() => setIsApiSettingsOpen(false)}
+				onSave={handleApiKeysSave}
 			/>
 			<div className="editor">
 				<div style={{ 
@@ -116,21 +137,44 @@ export default function App() {
 					<Tldraw 
 						persistenceKey="vibe-3d-code" 
 						shareZone={
-							<div style={{ display: 'flex', alignItems: 'center', gap: '8px', transform: 'scale(0.8)', transformOrigin: 'right center' }}>
+							<div style={{ 
+								display: 'flex', 
+								alignItems: 'center', 
+								gap: '8px', 
+								transform: 'scale(0.8)', 
+								transformOrigin: 'right center',
+								'> button': {
+									height: '40px',
+									padding: '0 12px',
+									fontSize: '14px',
+								}
+							}}>
 								<Vibe3DCodeButton />
 								<ImproveDrawingButton />
 								<AutoDrawButton />
 								<button
+									id="api-keys-button"
 									onClick={handleApiKeysClick}
 									className="tl-button"
 									style={{
 										display: 'flex',
 										alignItems: 'center',
+										justifyContent: 'center',
 										gap: '8px',
-										fontSize: '14px',
+										fontSize: '13px',
 										position: 'relative',
 										zIndex: 999999,
 										pointerEvents: 'auto',
+										height: '40px',
+										padding: '0 16px',
+										backgroundColor: 'var(--color-primary)',
+										color: 'var(--color-selected-contrast)',
+										border: 'none',
+										borderRadius: '8px',
+										fontFamily: 'var(--font-family)',
+										fontWeight: 500,
+										cursor: 'pointer',
+										whiteSpace: 'nowrap',
 									}}
 								>
 									<span style={{ fontSize: '16px' }}>⚙️</span>
@@ -146,6 +190,7 @@ export default function App() {
 				<ThreeJSCanvas visible={activeTab === 'threejs'} />
 			</div>
 			<TestAddCodeButton activeTab={activeTab} setActiveTab={setActiveTab} />
+			<DynamicArrow isVisible={showArrow} targetButtonId="api-keys-button" />
 		</>
 	)
 }

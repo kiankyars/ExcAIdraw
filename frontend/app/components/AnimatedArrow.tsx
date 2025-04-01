@@ -1,3 +1,5 @@
+'use client'
+
 import { motion } from 'framer-motion';
 
 interface AnimatedArrowProps {
@@ -11,11 +13,12 @@ export const AnimatedArrow: React.FC<AnimatedArrowProps> = ({ isVisible }) => {
     <motion.div
       style={{
         position: 'fixed',
-        top: '60px',
+        top: '15px',
         right: '100px',
         width: '40px',
         height: '40px',
         zIndex: 999999,
+        transform: 'rotate(-45deg)',
       }}
       initial={{ scale: 1 }}
       animate={{

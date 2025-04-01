@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState } from 'react';
 import Joyride, { Step, CallBackProps, STATUS } from 'react-joyride';
 import { AnimatedArrow } from './AnimatedArrow';
@@ -32,15 +34,20 @@ const ApiKeysStep = () => (
 
 export const OnboardingTutorial: React.FC<OnboardingTutorialProps> = ({ onComplete }) => {
   const [showArrow, setShowArrow] = useState(false);
-  const [run, setRun] = useState(true);
+  const [run, setRun] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Check if the tutorial has been completed before
+    setMounted(true);
     const tutorialCompleted = localStorage.getItem('tutorialCompleted');
-    if (tutorialCompleted) {
-      setRun(false);
+    if (!tutorialCompleted) {
+      setRun(true);
     }
   }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   const steps: Step[] = [
     {
