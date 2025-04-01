@@ -11,6 +11,8 @@ import { Model3DPreviewShapeUtil } from './PreviewShape/Model3DPreviewShape'
 import { useTabStore } from './store/appStore'
 import TestAddCodeButton from './components/TestAddCodeButton'
 import { TldrawLogo } from './components/TldrawLogo'
+import { useState } from 'react'
+import { ApiSettingsModal } from './components/ApiSettingsModal'
 
 // Dynamically import ThreeJSCanvas with ssr: false
 const ThreeJSCanvas = dynamic(
@@ -80,10 +82,15 @@ const TabGroup = ({ activeTab, setActiveTab }: TabGroupProps) => {
 
 export default function App() {
 	const { activeTab, setActiveTab } = useTabStore()
+	const [isApiSettingsOpen, setIsApiSettingsOpen] = useState(false)
 
 	return (
 		<>
 			<TabGroup activeTab={activeTab} setActiveTab={setActiveTab} />
+			<ApiSettingsModal 
+				isOpen={isApiSettingsOpen}
+				onClose={() => setIsApiSettingsOpen(false)}
+			/>
 			<div className="editor">
 				<div style={{ 
 					position: 'absolute', 
@@ -95,10 +102,23 @@ export default function App() {
 					<Tldraw 
 						persistenceKey="vibe-3d-code" 
 						shareZone={
-							<div style={{ display: 'flex' }}>
+							<div style={{ display: 'flex', alignItems: 'center', gap: '8px', transform: 'scale(0.8)', transformOrigin: 'right center' }}>
 								<Vibe3DCodeButton />
 								<ImproveDrawingButton />
 								<AutoDrawButton />
+								<button
+									onClick={() => setIsApiSettingsOpen(true)}
+									className="tl-button"
+									style={{
+										display: 'flex',
+										alignItems: 'center',
+										gap: '8px',
+										fontSize: '14px',
+									}}
+								>
+									<span style={{ fontSize: '16px' }}>⚙️</span>
+									API Keys
+								</button>
 							</div>
 						} 
 						shapeUtils={shapeUtils}

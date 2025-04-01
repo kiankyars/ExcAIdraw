@@ -1,6 +1,7 @@
 import { useEditor, useToasts } from '@tldraw/tldraw'
 import { useCallback, useState } from 'react'
 import { improveDrawing } from '../lib/improveDrawing'
+import { ApiKeyError } from '../utils/apiKeys'
 
 export function ImproveDrawingButton() {
   const editor = useEditor()
@@ -40,11 +41,21 @@ export function ImproveDrawingButton() {
       
     } catch (e) {
       console.error('Error in improve drawing workflow:', e)
-      addToast({
-        icon: 'cross-2',
-        title: 'Something went wrong',
-        description: (e as Error).message.slice(0, 100),
-      })
+      
+      // Special handling for API key errors
+      if (e instanceof ApiKeyError) {
+        addToast({
+          icon: 'settings',
+          title: 'API Keys Required',
+          description: e.message,
+        })
+      } else {
+        addToast({
+          icon: 'cross-2',
+          title: 'Something went wrong',
+          description: (e as Error).message.slice(0, 100),
+        })
+      }
     } finally {
       // Reset state
       setIsImproving(false)

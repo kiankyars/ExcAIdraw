@@ -2,6 +2,7 @@ import { Editor, getSvgAsImage } from '@tldraw/tldraw'
 import { getSelectionAsText } from './getSelectionAsText'
 import { blobToBase64 } from './blobToBase64'
 import { Model3DPreviewShape } from '../PreviewShape/Model3DPreviewShape'
+import { getHeaders } from '../utils/apiKeys'
 
 export async function edit3DCode(
   editor: Editor,
@@ -75,6 +76,7 @@ export async function edit3DCode(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...getHeaders()
       },
       body: JSON.stringify({
         threejs_code: threeJsCode,

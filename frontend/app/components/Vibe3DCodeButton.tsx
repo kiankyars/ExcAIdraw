@@ -3,6 +3,7 @@ import { useCallback, useState, useEffect } from 'react'
 import { vibe3DCode } from '../lib/vibe3DCode'
 import { edit3DCode } from '../lib/edit3DCode'
 import { Model3DPreviewShape } from '../PreviewShape/Model3DPreviewShape'
+import { ApiKeyError } from '../utils/apiKeys'
 
 export function Vibe3DCodeButton() {
   const editor = useEditor()
@@ -10,6 +11,7 @@ export function Vibe3DCodeButton() {
   const [is3DModelSelected, setIs3DModelSelected] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
   const [thinkingEnabled, setThinkingEnabled] = useState(true)
+  const [isThinking, setIsThinking] = useState(false)
   
   // Update state whenever selection changes
   useEffect(() => {
@@ -38,45 +40,46 @@ export function Vibe3DCodeButton() {
   }, []);
 
   const handleClick = useCallback(async () => {
-    if (isProcessing) return; // Prevent multiple clicks
-    
     try {
-      setIsProcessing(true);
-      
-      if (is3DModelSelected) {
-        // First get the 3D model shape
-        const selectedShapes = editor.getSelectedShapes();
-        const model3dShape = selectedShapes.find(shape => shape.type === 'model3d') as Model3DPreviewShape;
-        
-        if (!model3dShape) {
-          throw Error('Could not find the selected 3D model.');
-        }
-        
-        // Use edit3DCode with loading state via custom event
-        await edit3DCode(editor, (isEditing) => {
-          const elementId = model3dShape.id;
-          
-          // Dispatch a custom event to communicate with the component
-          const event = new CustomEvent('model3d-editing-state-change', { 
-            detail: { isEditing, elementId } 
-          });
-          window.dispatchEvent(event);
-        });
-      } else {
-        // Otherwise, use vibe3DCode to create a new 3D model
-        await vibe3DCode(editor, undefined, thinkingEnabled);
+      // Get the selected shapes to track them during improvement
+      const selectedShapes = editor.getSelectedShapes()
+      if (selectedShapes.length === 0) {
+        addToast({
+          icon: 'cross-2',
+          title: 'Select something first',
+          description: 'Please select a shape to make 3D',
+        })
+        return
       }
+
+      // Start loading state
+      setIsThinking(true)
+      
+      // Call actual vibe3D function
+      await vibe3DCode(editor, null, thinkingEnabled)
+      
     } catch (e) {
-      console.error(e)
-      addToast({
-        icon: 'cross-2',
-        title: 'Something went wrong',
-        description: (e as Error).message.slice(0, 100),
-      })
+      console.error('Error in vibe3D workflow:', e)
+      
+      // Special handling for API key errors
+      if (e instanceof ApiKeyError) {
+        addToast({
+          icon: 'settings',
+          title: 'API Keys Required',
+          description: e.message,
+        })
+      } else {
+        addToast({
+          icon: 'cross-2',
+          title: 'Something went wrong',
+          description: (e as Error).message.slice(0, 100),
+        })
+      }
     } finally {
-      setIsProcessing(false);
+      // Reset state
+      setIsThinking(false)
     }
-  }, [editor, addToast, is3DModelSelected, isProcessing, thinkingEnabled]);
+  }, [editor, addToast, thinkingEnabled])
 
   // 3D cube icon as an SVG
   const CubeIcon = () => (
