@@ -14,7 +14,6 @@ import {
   useToasts,
 } from '@tldraw/tldraw'
 import { useState, useEffect } from 'react'
-import { getHeaders } from '../utils/apiKeys'
 
 export type Model3DPreviewShape = TLBaseShape<
   'model3d',
@@ -569,10 +568,6 @@ export class Model3DPreviewShapeUtil extends BaseBoxShapeUtil<Model3DPreviewShap
                 // Handle ThreeJS code
                 const res = await fetch("http://localhost:8000/api/cerebras/parse", {
                   method: "POST",
-                  headers: {
-                    'Content-Type': 'application/json',
-                    ...getHeaders()
-                  },
                   body: shape.props.threeJsCode
                 });
                 const actualCode = await res.json();
@@ -632,10 +627,6 @@ export class Model3DPreviewShapeUtil extends BaseBoxShapeUtil<Model3DPreviewShap
                 // Handle ThreeJS code
                 const res = await fetch("http://localhost:8000/api/cerebras/parse", {
                   method: "POST",
-                  headers: {
-                    'Content-Type': 'application/json',
-                    ...getHeaders()
-                  },
                   body: shape.props.threeJsCode
                 });
                 const actualCode = await res.json();

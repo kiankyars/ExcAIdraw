@@ -3,7 +3,6 @@ import { getSelectionAsText } from './getSelectionAsText'
 import { blobToBase64 } from './blobToBase64'
 import { Model3DPreviewShape } from '../PreviewShape/Model3DPreviewShape'
 import { useObjectStore } from '../store/appStore'
-import { getHeaders } from '../utils/apiKeys'
 
 export async function vibe3DCode(editor: Editor, shapeId: TLShapeId | null = null, thinkingMode: boolean = false) {
   // Get the selected shapes (we need at least one)
@@ -58,7 +57,6 @@ export async function vibe3DCode(editor: Editor, shapeId: TLShapeId | null = nul
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...getHeaders()
         },
         body: JSON.stringify({
           model: "Qubico/trellis",
@@ -123,7 +121,6 @@ export async function vibe3DCode(editor: Editor, shapeId: TLShapeId | null = nul
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...getHeaders()
         },
         body: JSON.stringify({
           prompt: selectionText,

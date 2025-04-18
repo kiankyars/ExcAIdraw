@@ -1,7 +1,6 @@
 import { Editor, createShapeId, getSvgAsImage, TLImageShape, AssetRecordType } from '@tldraw/tldraw'
 import { getSelectionAsText } from './getSelectionAsText'
 import { blobToBase64 } from './blobToBase64'
-import { getHeaders } from '../utils/apiKeys'
 
 export async function improveDrawing(editor: Editor) {
   // Get the selected shapes (we need at least one)
@@ -46,7 +45,6 @@ export async function improveDrawing(editor: Editor) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...getHeaders()
       },
       body: JSON.stringify({
         prompt: selectionText,
